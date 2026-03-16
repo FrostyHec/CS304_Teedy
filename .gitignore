@@ -19,3 +19,7 @@ docs/*
 
 #macos
 .DS_Store
+
+#self-defined
+/data
+/.non_public
