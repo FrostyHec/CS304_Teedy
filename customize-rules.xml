@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<ruleset name="Custom Teedy PMD Ruleset"
+         xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0
+                             https://pmd.sourceforge.io/ruleset_2_0_0.xsd">
+
+    <description>
+        Custom PMD ruleset for Teedy project.
+        Covers the following software metrics:
+        1. Lines of Code (LoC) - NcssCount, ExcessiveClassLength, ExcessiveMethodLength
+        2. Cyclomatic Complexity (CC) - CyclomaticComplexity
+        3. Weighted Methods per Class (WMC) - CyclomaticComplexity (class level), TooManyMethods
+        4. Coupling Between Objects (CBO) - CouplingBetweenObjects, ExcessiveImports
+        5. Lack of Cohesion in Methods (LCOM) - GodClass, TooManyFields
+    </description>
+
+    <!-- ============================================================ -->
+    <!-- 1. Lines of Code (LoC)                                       -->
+    <!-- ============================================================ -->
+
+    <!-- NcssCount: Non-Commenting Source Statements metric for methods and classes -->
+    <rule ref="category/java/design.xml/NcssCount">
+        <properties>
+            <property name="methodReportLevel" value="60" />
+            <property name="classReportLevel" value="1500" />
+        </properties>
+    </rule>
+
+    <!-- ExcessiveClassLength: flags classes with too many lines of code -->
+    <rule ref="category/java/design.xml/ExcessiveClassLength">
+        <properties>
+            <property name="minimum" value="1000" />
+        </properties>
+    </rule>
+
+    <!-- ExcessiveMethodLength: flags methods with too many lines of code -->
+    <rule ref="category/java/design.xml/ExcessiveMethodLength">
+        <properties>
+            <property name="minimum" value="100" />
+        </properties>
+    </rule>
+
+    <!-- ============================================================ -->
+    <!-- 2. Cyclomatic Complexity (CC)                                -->
+    <!-- ============================================================ -->
+
+    <!-- CyclomaticComplexity: measures decision points in methods -->
+    <rule ref="category/java/design.xml/CyclomaticComplexity">
+        <properties>
+            <property name="classReportLevel" value="80" />
+            <property name="methodReportLevel" value="10" />
+        </properties>
+    </rule>
+
+    <!-- ============================================================ -->
+    <!-- 3. Weighted Methods per Class (WMC)                          -->
+    <!-- WMC = sum of CC of all methods in a class.                   -->
+    <!-- CyclomaticComplexity classReportLevel is effectively WMC.    -->
+    <!-- TooManyMethods also reflects class complexity via method count -->
+    <!-- ============================================================ -->
+
+    <!-- TooManyMethods: classes with too many methods indicate high WMC -->
+    <rule ref="category/java/design.xml/TooManyMethods">
+        <properties>
+            <property name="maxmethods" value="10" />
+        </properties>
+    </rule>
+
+    <!-- ============================================================ -->
+    <!-- 4. Coupling Between Objects (CBO)                            -->
+    <!-- ============================================================ -->
+
+    <!-- CouplingBetweenObjects: counts unique types used in a class -->
+    <rule ref="category/java/design.xml/CouplingBetweenObjects">
+        <properties>
+            <property name="threshold" value="20" />
+        </properties>
+    </rule>
+
+    <!-- ExcessiveImports: high import count indicates high coupling -->
+    <rule ref="category/java/design.xml/ExcessiveImports">
+        <properties>
+            <property name="minimum" value="30" />
+        </properties>
+    </rule>
+
+    <!-- ============================================================ -->
+    <!-- 5. Lack of Cohesion in Methods (LCOM)                        -->
+    <!-- ============================================================ -->
+
+    <!-- GodClass: detects classes with high WMC, high ATFD, low TCC  -->
+    <!-- TCC (Tight Class Cohesion) is inversely related to LCOM      -->
+    <rule ref="category/java/design.xml/GodClass" />
+
+    <!-- TooManyFields: too many fields may indicate low cohesion -->
+    <rule ref="category/java/design.xml/TooManyFields">
+        <properties>
+            <property name="maxfields" value="15" />
+        </properties>
+    </rule>
+
+</ruleset>
