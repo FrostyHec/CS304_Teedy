@@ -44,20 +44,17 @@ pipeline {
         stage('Run containers') {
             steps {
                 script {
-                    // 修改点3：使用循环启动 3 个容器，端口分别为 8082, 8083, 8084
                     def ports = ['8082', '8083', '8084']
                     
                     for (String port : ports) {
                         def containerName = "teedy-container-${port}"
                         
-                        // 如果同名容器已存在，先停止并删除
+                        // 停止并删除旧容器
                         sh "docker stop ${containerName} || true"
                         sh "docker rm ${containerName} || true"
 
-                        // 运行新的容器，映射对应的端口到 8080
-                        docker.image("${env.DOCKER_IMAGE}:${env.DOCKER_TAG}").run(
-                            "--name ${containerName} -d -p ${port}:8080"
-                        )
+                        // 【关键修改】：使用原生 sh 命令执行 docker run，而不是 docker.image().run()
+                        sh "docker run --name ${containerName} -d -p ${port}:8080 ${env.DOCKER_IMAGE}:${env.DOCKER_TAG}"
                     }
 
                     // 列出运行中的 teedy-container 确认状态
@@ -65,5 +62,4 @@ pipeline {
                 }
             }
         }
-    }
 }
